@@ -254,13 +254,10 @@ namespace Template
                         Stretch = Stretch.Uniform
                     }
                 };
-                imageWindow.Show(); // 或用 Show() 開非模態視窗
+                imageWindow.Show(); // 或用ShowDialog()只開1個視窗
             }
         }
         #endregion
-
-
-
 
 
     }
