@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenCvSharp;
+using OpenCvSharp.Flann;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Xceed.Wpf.Toolkit;
 using static System.Net.Mime.MediaTypeNames;
 using static Template.BaseLogRecord;
 
@@ -61,16 +64,14 @@ namespace Template
             {
                 for (int j = 0; j < 30; j++)
                 {
-                    Dies.Add($"{i},{j}");
+                    Dies.Add($"{j},{i}");
                 }
             }
-
         }
     }
 
     public partial class MainWindow : System.Windows.Window
     {
-        
         public MainWindow()
         {
             InitializeComponent();
@@ -79,7 +80,7 @@ namespace Template
         #region Function
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (MessageBox.Show("請問是否要關閉？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            if (System.Windows.MessageBox.Show("請問是否要關閉？", "確認", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
             {
                 e.Cancel = false;
             }
@@ -154,16 +155,18 @@ namespace Template
             return null;
         }
 
+        /// <summary>
+        /// index︰行、列
+        /// </summary>
+        /// <param name="index"></param>
         private void ChangeWaferIC(string index)
         {
-            ContentPresenter contentPresenter = (ContentPresenter)test.ItemContainerGenerator.ContainerFromItem(index);
-
+            ContentPresenter contentPresenter = (ContentPresenter)Wafer.ItemContainerGenerator.ContainerFromItem(index);
             // 检查 ContentPresenter 是否存在
             if (contentPresenter != null)
             {
                 // 从 ContentPresenter 中找到 Button
                 Button button = FindVisualChild<Button>(contentPresenter);
-
                 // 检查按钮是否存在
                 if (button != null)
                 {
@@ -175,17 +178,15 @@ namespace Template
 
         private void ChangeAllWaferIC()
         {
-            foreach (var item in test.Items)
+            foreach (var item in Wafer.Items)
             {
                 // 通过 ItemContainerGenerator 找到每个 ContentPresenter
-                ContentPresenter contentPresenter = (ContentPresenter)test.ItemContainerGenerator.ContainerFromItem(item);
-
+                ContentPresenter contentPresenter = (ContentPresenter)Wafer.ItemContainerGenerator.ContainerFromItem(item);
                 // 检查 ContentPresenter 是否存在
                 if (contentPresenter != null)
                 {
                     // 从 ContentPresenter 中找到 Button
                     Button button = FindVisualChild<Button>(contentPresenter);
-
                     // 检查按钮是否存在
                     if (button != null)
                     {
@@ -194,7 +195,6 @@ namespace Template
                     }
                 }
             }
-
         }
         #endregion
 
@@ -217,12 +217,16 @@ namespace Template
             {
                 case nameof(Demo):
                     {
-                        ChangeWaferIC("15,15");
+                        ChangeWaferIC("0,15");
                         //ChangeAllWaferIC();
                         break;
                     }
-               
             }
+        }
+
+        private void DieButton_Click(object sender, RoutedEventArgs e)
+        {
+            
         }
         #endregion
 

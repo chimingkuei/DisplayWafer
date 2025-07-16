@@ -56,7 +56,7 @@
                             <RowDefinition Height="600"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        <ItemsControl x:Name="test"  Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Dies}">
+                        <ItemsControl x:Name="Wafer" Grid.Column="1" Grid.Row="1" ItemsSource="{Binding Dies}">
                             <ItemsControl.Clip>
                                 <EllipseGeometry Center="300 300" RadiusX="300" RadiusY="300"/>
                             </ItemsControl.Clip>
@@ -68,7 +68,7 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button Height="20" Width="20" Margin="0" Background="LightSkyBlue"></Button>
+                                    <Button Height="20" Width="20" Margin="0" Background="LightSkyBlue" Click="DieButton_Click"></Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
