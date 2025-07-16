@@ -27,6 +27,7 @@ using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using static System.Net.Mime.MediaTypeNames;
 using static Template.BaseLogRecord;
+using Image = System.Windows.Controls.Image;
 
 namespace Template
 {
@@ -156,7 +157,7 @@ namespace Template
         }
 
         /// <summary>
-        /// index︰行、列
+        /// index arrangement︰行、列
         /// </summary>
         /// <param name="index"></param>
         private void ChangeWaferIC(string index)
@@ -202,12 +203,15 @@ namespace Template
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadConfig(0, 0);
+            viewModel = new MainViewModel();
+            this.DataContext = viewModel;
         }
         BaseConfig<RootObject> Config = new BaseConfig<RootObject>();
         #region Log
         BaseLogRecord Logger = new BaseLogRecord();
         //Logger.WriteLog("儲存參數!", LogLevel.General, richTextBoxGeneral);
         #endregion
+        private MainViewModel viewModel;
         #endregion
 
         #region Main Screen
@@ -217,8 +221,7 @@ namespace Template
             {
                 case nameof(Demo):
                     {
-                        ChangeWaferIC("0,15");
-                        //ChangeAllWaferIC();
+                        ChangeWaferIC("15,15");
                         break;
                     }
             }
@@ -226,7 +229,33 @@ namespace Template
 
         private void DieButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            var button = sender as Button;
+            var die = button?.DataContext as string;
+            if (die != null)
+            {
+                // 解析座標，建立檔名，例如 "10_5.png"
+                string fileName = die.Replace(",", "_") + ".bmp";
+                string imagePath = System.IO.Path.Combine("Wafer Image", fileName); // 相對於執行目錄
+                // 檢查圖檔是否存在
+                if (!File.Exists(imagePath))
+                {
+                    System.Windows.MessageBox.Show($"找不到圖檔: {imagePath}");
+                    return;
+                }
+                // 建立影像視窗
+                var imageWindow = new System.Windows.Window
+                {
+                    Title = $"Die {die}",
+                    Width = 300,
+                    Height = 300,
+                    Content = new Image
+                    {
+                        Source = new BitmapImage(new Uri(System.IO.Path.GetFullPath(imagePath))),
+                        Stretch = Stretch.Uniform
+                    }
+                };
+                imageWindow.Show(); // 或用 Show() 開非模態視窗
+            }
         }
         #endregion
 
